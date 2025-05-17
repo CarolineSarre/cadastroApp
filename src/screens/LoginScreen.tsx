@@ -1,46 +1,79 @@
-import React from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+// src/screens/LoginScreen.tsx
+import React, { useState } from 'react';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import InputField from '../components/InputField';
+import PrimaryButton from '../components/PrimaryButton';
+import { loginStyles } from '../styles/loginStyles';
+import { validateLoginFields } from '../utils/validations';
 
-const schema = yup.object({
-  email: yup.string().email('Email inválido').required('Obrigatório'),
-  password: yup.string().min(4, 'Mínimo 4 caracteres').required('Obrigatório'),
-});
+type RootStackParamList = {
+  Login: undefined;
+  Home: undefined;
+};
 
-export default function LoginScreen({ navigation }: any) {
-  const { control, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
-  });
+type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
-  const onSubmit = (data: any) => {
-    navigation.navigate('Home');
+const LoginScreen = () => {
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [senhaError, setSenhaError] = useState('');
+
+  const handleLogin = () => {
+    const { loginError, senhaError } = validateLoginFields({ login, senha });
+
+    setLoginError(loginError);
+    setSenhaError(senhaError);
+
+    if (!loginError && !senhaError) {
+      navigation.navigate('Home');
+    }
   };
 
   return (
-    <View>
-      <Text>Email</Text>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextInput onChangeText={onChange} value={value} placeholder="email@exemplo.com" />
-        )}
-      />
-      {errors.email && <Text>{errors.email.message}</Text>}
+    <SafeAreaView style={loginStyles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={60}
+      >
+        <View style={loginStyles.card}>
+          <Text style={loginStyles.welcomeText}>Seja bem vindo!</Text>
 
-      <Text>Senha</Text>
-      <Controller
-        name="password"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextInput secureTextEntry onChangeText={onChange} value={value} placeholder="********" />
-        )}
-      />
-      {errors.password && <Text>{errors.password.message}</Text>}
+          <InputField placeholder="Login" value={login} onChangeText={setLogin} />
+          {loginError ? <Text style={styles.error}>{loginError}</Text> : null}
 
-      <Button title="Entrar" onPress={handleSubmit(onSubmit)} />
-    </View>
+          <InputField placeholder="Senha" secureTextEntry value={senha} onChangeText={setSenha} />
+          {senhaError ? <Text style={styles.error}>{senhaError}</Text> : null}
+
+          <Text style={loginStyles.linkText}>Redefinir senha</Text>
+
+          <PrimaryButton title="ENTRAR" onPress={handleLogin} />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  error: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -12,
+    marginBottom: 12,
+    marginLeft: 4,
+  },
+});
+
+export default LoginScreen;

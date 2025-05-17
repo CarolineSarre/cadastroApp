@@ -8,8 +8,8 @@ export const loginStyles = StyleSheet.create({
     alignItems: 'center',    
   },
   card: {
-    width: '85%',
-    maxWidth: 360,
+    width: '100%',
+    maxWidth: 760,
     padding: 24,
     borderRadius: 12,
     backgroundColor: '#fff',

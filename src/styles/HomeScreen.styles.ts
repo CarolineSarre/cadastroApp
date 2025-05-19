@@ -44,16 +44,19 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     borderBottomWidth: 6,
     borderBottomColor: '#F7941D',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
   },
   cardIcon: {
     width: '60%',
     height: 100,
     marginRight: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#444',
+    textAlign: 'center',
   },
 });

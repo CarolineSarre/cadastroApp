@@ -9,7 +9,7 @@ export const HomeScreen = () => {
   const navigation = useNavigation();
 
   const handleNavigateToCadastros = () => {
-    navigation.navigate('Cadastros' as never); // tipo 'never' usado para evitar erros de tipo
+    navigation.navigate('Cadastros' as never);
   };
 
   return (
@@ -23,7 +23,7 @@ export const HomeScreen = () => {
 
       <Image
         source={{
-          uri: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', // exemplo de imagem
+          uri: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
         }}
         style={styles.image}
         resizeMode="cover"
